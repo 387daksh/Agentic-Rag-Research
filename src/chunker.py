@@ -29,6 +29,10 @@ def chunk_text(text,arxiv_id,title):
         end=start+CHUNK_SIZE
         chunk_words=words[start:end]
         chunk_text=" ". join(chunk_words)
+        lower_text=chunk_text.lower()
+        if "references" in lower_text or "bibliography" in lower_text:
+            start += (CHUNK_SIZE - CHUNK_OVERLAP)
+            continue
         chunks.append({
             "chunk_id":f"{arxiv_id}_{chunk_index}",
             "arxiv_id":arxiv_id,

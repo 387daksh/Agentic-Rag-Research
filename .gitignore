@@ -1,3 +1,5 @@
 data/papers
 data/chroma
 .vscode/
+data/BM25
+__pycache__
