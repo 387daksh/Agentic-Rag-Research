@@ -140,7 +140,7 @@ Output one paragraph.
     hypothetical_answer = response.choices[0].message.content
     return f"{query} {hypothetical_answer}"
 
-def retrieve(collections,bm25,chunks,query,n_results=5,use_hyde=True):
+def retrieve(collections,bm25,chunks,query,n_results=5,use_hyde=True,use_reranker=True):
     if use_hyde:
         expanded_query=hyde(query)
     else:
@@ -158,7 +158,10 @@ def retrieve(collections,bm25,chunks,query,n_results=5,use_hyde=True):
     # print("before reranking")
     # for r in combined[:20]:
     #     print(r["title"])
-    reranked=rerank(query,deduped[:20])
+    if use_reranker:
+        reranked=rerank(query,deduped[:20])
+    else:
+        reranked=deduped
     # print("after reranking")
     # for r in reranked[:20]:
     #     print(r["title"])

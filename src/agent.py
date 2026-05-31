@@ -26,12 +26,14 @@ Question: {question}"""
     )
     text=response.choices[0].message.content.strip()
     # print(text)
+    
     try:
         data=json.loads(text)
         sub_questions = data["sub-questions"]
     except Exception as e:
         print(f"Planner error: {e}")
         sub_questions=[question]
+        
     return sub_questions
 
 def reflect(question,retrieved_chunks,round_num):
@@ -59,6 +61,7 @@ If sufficient is false, provide 2 new search queries to find missing evidence.""
         response_format={"type":"json_object"}
     )    
     text = response.choices[0].message.content.strip()
+    
     try:
         results=json.loads(text)
         print(results)
@@ -66,9 +69,16 @@ If sufficient is false, provide 2 new search queries to find missing evidence.""
     except Exception as e:
         print(f"reflector error {e}")
         results={"sufficient": True, "reason": "parse error", "new_queries": []}
+        
     return results
 
-def synthesize(question,all_chunks):
+def synthesize(question,all_chunks,question_type="survey"):
+    if question_type == "factoid":
+        length_guide = "1 to 3 sentences. Be concise and direct."
+    elif question_type == "comparative":
+        length_guide = "100 to 300 words. Compare at least 2 papers directly."
+    else:  # survey
+        length_guide = "250 to 600 words. Be comprehensive and well structured."
     evidence=""
     for i,chunk in enumerate(all_chunks):
         evidence+=f"\n[{i+1}] From '{chunk['title']}' ({chunk['arxiv_id']}):\n{chunk['text'][:400]}\n"
@@ -78,7 +88,7 @@ Rules:
 1. Every claim must be supported by evidence
 2. Cite sources inline using the format [arxiv_id] e.g. [2401.12345]
 3. Do not use any knowledge outside the provided evidence
-4. Be specific and technical
+4. Length: {length_guide}
 5. If evidence is contradictory, acknowledge it
 
 Question: {question}
@@ -116,20 +126,27 @@ def verify_citations(answer,all_chunks):
         answer = answer.replace(f"[{uid}]", "")
     return answer, verified
 
-def run_agent(question):
+def run_agent(question,question_type="survey",use_planner=True, use_reflector=True, use_reranker=True, use_hyde=True, use_verifier=True,):
     print(f"\n{'='*50}")
     print(f"Question: {question}")
     print(f"\n{'='*50}")
     all_chunks = []
     tool_call_count = 0
-    print("\n[PLANNER] breaking question into sub-questions")
-    sub_questions = plan(question)
-    print(f"sub-questions: {sub_questions}")
+    
+    if use_planner:
+        print("\n[PLANNER] breaking question into sub-questions")
+        sub_questions = plan(question)
+        print(f"sub-questions: {sub_questions}")
+    else:
+        print("\n[PLANNER] Skipped")
+        sub_questions = [question]
+    
     print("\n[RETRIEVER] Retrieving evidence...")
     for sub_q in sub_questions:
-        chunks = retrieve(collection, bm25, chunks_data, sub_q, n_results=5)
+        chunks = retrieve(collection, bm25, chunks_data, sub_q, n_results=5,use_hyde=use_hyde,use_reranker=use_reranker)
         all_chunks.extend(chunks)
         tool_call_count += 1
+        
     seen_ids = set()
     unique_chunks = []
     for chunk in all_chunks:
@@ -138,34 +155,47 @@ def run_agent(question):
             unique_chunks.append(chunk)
     all_chunks = unique_chunks
     print(f"retrieved {len(all_chunks)} unique chunks")
-    for round_num in range(1, 4):
-        print(f"\n[REFLECTOR] round {round_num}/3")
-        reflection = reflect(question, all_chunks, round_num)
-        print(f"Sufficient: {reflection['sufficient']}")
-        print(f"Reason: {reflection['reason']}")
-        if reflection["sufficient"]:
-            print("Evidence sufficient, stopping search.")
-            break
-        if round_num == 3:
-            print("Max rounds reached, proceeding to synthesis.")
-            break
-        print(f"Searching for more evidence")
-        for new_query in reflection.get("new_queries", []):
-            new_chunks = retrieve(collection, bm25, chunks_data, new_query, n_results=3)
-            all_chunks.extend(new_chunks)
-            tool_call_count += 1
-        seen_ids = set()
-        unique_chunks = []
-        for chunk in all_chunks:
-            if chunk["chunk_id"] not in seen_ids:
-                seen_ids.add(chunk["chunk_id"])
-                unique_chunks.append(chunk)
-        all_chunks = unique_chunks
+    
+    if use_reflector:
+        for round_num in range(1, 4):
+            print(f"\n[REFLECTOR] round {round_num}/3")
+            reflection = reflect(question, all_chunks, round_num)
+            print(f"sufficient: {reflection['sufficient']}")
+            print(f"reason: {reflection['reason']}")
+            if reflection["sufficient"]:
+                print("evidence sufficient, stopping search.")
+                break
+            if round_num == 3:
+                print("max rounds reached, proceeding to synthesis.")
+                break
+            print(f"searching for more evidence")
+            for new_query in reflection.get("new_queries", []):
+                new_chunks = retrieve(collection, bm25, chunks_data, new_query, n_results=3,use_hyde=use_hyde,use_reranker=use_reranker)
+                all_chunks.extend(new_chunks)
+                tool_call_count += 1
+                
+            seen_ids = set()
+            unique_chunks = []
+            for chunk in all_chunks:
+                if chunk["chunk_id"] not in seen_ids:
+                    seen_ids.add(chunk["chunk_id"])
+                    unique_chunks.append(chunk)
+            all_chunks = unique_chunks
+    else:
+        print("\n[REFLECTOR] skipped")
+            
     print(f"\n[SYNTHESIZER] writing answer from {len(all_chunks)} chunks")
-    answer = synthesize(question, all_chunks)
-    print("\n[VERIFIER] checking citations") 
-    verified_answer, verified_ids = verify_citations(answer, all_chunks)
-    print(f"verified citations: {verified_ids}")
+    answer = synthesize(question, all_chunks, question_type)
+    
+    if use_verifier:
+        print("\n[VERIFIER] checking citations") 
+        verified_answer, verified_ids = verify_citations(answer, all_chunks)
+        print(f"verified citations: {verified_ids}")
+    else:
+        print("\n[VERIFIER] skipped")
+        import re
+        verified_ids = re.findall(r'\[(\d{4}\.\d{4,5}(?:v\d+)?)\]', answer)
+        
     return {
         "question": question,
         "answer": verified_answer,
@@ -173,6 +203,7 @@ def run_agent(question):
         "tool_call_count": tool_call_count,
         "chunks_used": len(all_chunks)
     }
+    
 if __name__ == "__main__":
     test_question = "How do LLM agents plan and decompose complex tasks?"
     result = run_agent(test_question)
