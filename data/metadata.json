@@ -4737,5 +4737,215 @@
     "abstract": "Computer-Using Agents (CUA) enable users to automate increasingly-complex tasks using graphical interfaces such as browsers. As many potential tasks require personal data, we propose Computer-Using Personal Agents (CUPAs) that have access to an external repository of the user's personal data. Compared with CUAs, CUPAs offer users better control of their personal data, the potential to automate more tasks involving personal data, better interoperability with external sources of data, and better capabilities to coordinate with other CUPAs in order to solve collaborative tasks involving the personal data of multiple users.",
     "pdf_url": "https://arxiv.org/pdf/2503.15515v1",
     "published": "2025-01-31"
+  },
+  "2504.19413": {
+    "arxiv_id": "2504.19413",
+    "title": "Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory",
+    "abstract": "Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory",
+    "pdf_url": "https://arxiv.org/pdf/2504.19413",
+    "published": "2024-01-01"
+  },
+  "2502.12110": {
+    "arxiv_id": "2502.12110",
+    "title": "A-MEM: Agentic Memory for LLM Agents",
+    "abstract": "A-MEM: Agentic Memory for LLM Agents",
+    "pdf_url": "https://arxiv.org/pdf/2502.12110",
+    "published": "2024-01-01"
+  },
+  "2406.12045": {
+    "arxiv_id": "2406.12045",
+    "title": "tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains",
+    "abstract": "tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains",
+    "pdf_url": "https://arxiv.org/pdf/2406.12045",
+    "published": "2024-01-01"
+  },
+  "2404.07972": {
+    "arxiv_id": "2404.07972",
+    "title": "AppWorld: A Controllable World of Apps and People for Benchmarking Interactive Coding Agents",
+    "abstract": "AppWorld: A Controllable World of Apps and People for Benchmarking Interactive Coding Agents",
+    "pdf_url": "https://arxiv.org/pdf/2404.07972",
+    "published": "2024-01-01"
+  },
+  "2405.09939": {
+    "arxiv_id": "2405.09939",
+    "title": "OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments",
+    "abstract": "OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments",
+    "pdf_url": "https://arxiv.org/pdf/2405.09939",
+    "published": "2024-01-01"
+  },
+  "2502.11357": {
+    "arxiv_id": "2502.11357",
+    "title": "UI-TARS: Pioneering Automated GUI Interaction with Native Agents",
+    "abstract": "UI-TARS: Pioneering Automated GUI Interaction with Native Agents",
+    "pdf_url": "https://arxiv.org/pdf/2502.11357",
+    "published": "2024-01-01"
+  },
+  "2503.17358": {
+    "arxiv_id": "2503.17358",
+    "title": "UI-TARS-2: A New Era of Native GUI Agents",
+    "abstract": "UI-TARS-2: A New Era of Native GUI Agents",
+    "pdf_url": "https://arxiv.org/pdf/2503.17358",
+    "published": "2024-01-01"
+  },
+  "2405.15232": {
+    "arxiv_id": "2405.15232",
+    "title": "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering",
+    "abstract": "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering",
+    "pdf_url": "https://arxiv.org/pdf/2405.15232",
+    "published": "2024-01-01"
+  },
+  "2405.15793": {
+    "arxiv_id": "2405.15793",
+    "title": "OpenHands: An Open Platform for AI Software Developers as Generalist Agents",
+    "abstract": "OpenHands: An Open Platform for AI Software Developers as Generalist Agents",
+    "pdf_url": "https://arxiv.org/pdf/2405.15793",
+    "published": "2024-01-01"
+  },
+  "2502.18449": {
+    "arxiv_id": "2502.18449",
+    "title": "SWE-EVO: Evolving Agent-Computer Interfaces for Software Engineering",
+    "abstract": "SWE-EVO: Evolving Agent-Computer Interfaces for Software Engineering",
+    "pdf_url": "https://arxiv.org/pdf/2502.18449",
+    "published": "2024-01-01"
+  },
+  "2505.16526": {
+    "arxiv_id": "2505.16526",
+    "title": "Agent Interoperability Protocols: MCP A2A ACP and ANP",
+    "abstract": "Agent Interoperability Protocols: MCP A2A ACP and ANP",
+    "pdf_url": "https://arxiv.org/pdf/2505.16526",
+    "published": "2024-01-01"
+  },
+  "2502.09015": {
+    "arxiv_id": "2502.09015",
+    "title": "Deep Research Agents: A Systematic Examination",
+    "abstract": "Deep Research Agents: A Systematic Examination",
+    "pdf_url": "https://arxiv.org/pdf/2502.09015",
+    "published": "2024-01-01"
+  },
+  "2503.00496": {
+    "arxiv_id": "2503.00496",
+    "title": "Open and Reproducible Deep Research",
+    "abstract": "Open and Reproducible Deep Research",
+    "pdf_url": "https://arxiv.org/pdf/2503.00496",
+    "published": "2024-01-01"
+  },
+  "2501.09136": {
+    "arxiv_id": "2501.09136",
+    "title": "From Web Search Towards Agentic Deep Research",
+    "abstract": "From Web Search Towards Agentic Deep Research",
+    "pdf_url": "https://arxiv.org/pdf/2501.09136",
+    "published": "2024-01-01"
+  },
+  "2406.14928": {
+    "arxiv_id": "2406.14928",
+    "title": "Multi-Agent Collaboration Mechanisms: A Survey",
+    "abstract": "Multi-Agent Collaboration Mechanisms: A Survey",
+    "pdf_url": "https://arxiv.org/pdf/2406.14928",
+    "published": "2024-01-01"
+  },
+  "2503.12921": {
+    "arxiv_id": "2503.12921",
+    "title": "Multi-Turn Multi-Agent Orchestration for Complex Task Solving",
+    "abstract": "Multi-Turn Multi-Agent Orchestration for Complex Task Solving",
+    "pdf_url": "https://arxiv.org/pdf/2503.12921",
+    "published": "2024-01-01"
+  },
+  "2410.05738": {
+    "arxiv_id": "2410.05738",
+    "title": "Can LLM Agents Really Debate? A Controlled Study",
+    "abstract": "Can LLM Agents Really Debate? A Controlled Study",
+    "pdf_url": "https://arxiv.org/pdf/2410.05738",
+    "published": "2024-01-01"
+  },
+  "2502.17416": {
+    "arxiv_id": "2502.17416",
+    "title": "Multi-Agent Collaboration via Evolving Orchestration",
+    "abstract": "Multi-Agent Collaboration via Evolving Orchestration",
+    "pdf_url": "https://arxiv.org/pdf/2502.17416",
+    "published": "2024-01-01"
+  },
+  "2503.15703": {
+    "arxiv_id": "2503.15703",
+    "title": "OS-MAP: Mapping Computer-Using Agent Capabilities",
+    "abstract": "OS-MAP: Mapping Computer-Using Agent Capabilities",
+    "pdf_url": "https://arxiv.org/pdf/2503.15703",
+    "published": "2024-01-01"
+  },
+  "2501.02015": {
+    "arxiv_id": "2501.02015",
+    "title": "Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG",
+    "abstract": "Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG",
+    "pdf_url": "https://arxiv.org/pdf/2501.02015",
+    "published": "2024-01-01"
+  },
+  "2409.13511": {
+    "arxiv_id": "2409.13511",
+    "title": "Agent Workflow Memory",
+    "abstract": "Agent Workflow Memory",
+    "pdf_url": "https://arxiv.org/pdf/2409.13511",
+    "published": "2024-01-01"
+  },
+  "2406.14592": {
+    "arxiv_id": "2406.14592",
+    "title": "Cognitive Architectures for Language Agents: A Survey",
+    "abstract": "Cognitive Architectures for Language Agents: A Survey",
+    "pdf_url": "https://arxiv.org/pdf/2406.14592",
+    "published": "2024-01-01"
+  },
+  "2504.01990": {
+    "arxiv_id": "2504.01990",
+    "title": "ReAct Meets Memory: Enhancing Agent Capabilities",
+    "abstract": "ReAct Meets Memory: Enhancing Agent Capabilities",
+    "pdf_url": "https://arxiv.org/pdf/2504.01990",
+    "published": "2024-01-01"
+  },
+  "2503.04598": {
+    "arxiv_id": "2503.04598",
+    "title": "HippoRAG: Neurobiologically Inspired Long-Term Memory for Large Language Models",
+    "abstract": "HippoRAG: Neurobiologically Inspired Long-Term Memory for Large Language Models",
+    "pdf_url": "https://arxiv.org/pdf/2503.04598",
+    "published": "2024-01-01"
+  },
+  "2502.06258": {
+    "arxiv_id": "2502.06258",
+    "title": "Graph-Based Agent Memory Systems",
+    "abstract": "Graph-Based Agent Memory Systems",
+    "pdf_url": "https://arxiv.org/pdf/2502.06258",
+    "published": "2024-01-01"
+  },
+  "2410.10624": {
+    "arxiv_id": "2410.10624",
+    "title": "LAMBDA: Large Language Model-Based Data Agent",
+    "abstract": "LAMBDA: Large Language Model-Based Data Agent",
+    "pdf_url": "https://arxiv.org/pdf/2410.10624",
+    "published": "2024-01-01"
+  },
+  "2405.14751": {
+    "arxiv_id": "2405.14751",
+    "title": "Agent Hospital: A Simulacrum of Hospital with Evolvable Medical Agents",
+    "abstract": "Agent Hospital: A Simulacrum of Hospital with Evolvable Medical Agents",
+    "pdf_url": "https://arxiv.org/pdf/2405.14751",
+    "published": "2024-01-01"
+  },
+  "2503.09110": {
+    "arxiv_id": "2503.09110",
+    "title": "AgentBench: Evaluating LLMs as Agents",
+    "abstract": "AgentBench: Evaluating LLMs as Agents",
+    "pdf_url": "https://arxiv.org/pdf/2503.09110",
+    "published": "2024-01-01"
+  },
+  "2406.13352": {
+    "arxiv_id": "2406.13352",
+    "title": "TextGrad: Automatic Differentiation via Text",
+    "abstract": "TextGrad: Automatic Differentiation via Text",
+    "pdf_url": "https://arxiv.org/pdf/2406.13352",
+    "published": "2024-01-01"
+  },
+  "2504.11336": {
+    "arxiv_id": "2504.11336",
+    "title": "AgentReview: Exploring Peer Review Dynamics with LLM Agents",
+    "abstract": "AgentReview: Exploring Peer Review Dynamics with LLM Agents",
+    "pdf_url": "https://arxiv.org/pdf/2504.11336",
+    "published": "2024-01-01"
   }
 }
