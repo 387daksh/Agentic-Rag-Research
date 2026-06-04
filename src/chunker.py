@@ -98,9 +98,7 @@ def extract_and_chunk(pdf_path, arxiv_id, title):
         if isinstance(element, SectionHeaderItem):
             heading = element.text.strip() if element.text else ""
             if current_text.strip() and not skip_current_section and first_section_done:
-                new_chunks, chunk_index = split_into_chunks(
-                    current_text.strip(), arxiv_id, title, current_section, chunk_index
-                )
+                new_chunks, chunk_index = split_into_chunks(current_text.strip(), arxiv_id, title, current_section, chunk_index)
                 chunks.extend(new_chunks)
 
             current_section = heading
@@ -111,18 +109,15 @@ def extract_and_chunk(pdf_path, arxiv_id, title):
 
         if skip_current_section:
             continue
-
-        # Handle text
+        
         if isinstance(element, TextItem):
             text = element.text.strip() if element.text else ""
             if not text:
                 continue
-            # Skip very short lines - likely captions or labels
             if len(text.split()) < 8:
                 continue
             current_text += " " + text
 
-        # Handle tables - convert to text summary
         elif isinstance(element, TableItem):
             try:
                 table_text = element.export_to_markdown(doc)
@@ -130,14 +125,11 @@ def extract_and_chunk(pdf_path, arxiv_id, title):
                     current_text += f"\n[TABLE]\n{table_text}\n"
             except:
                 pass
-
-        # Handle lists
         elif isinstance(element, ListItem):
             text = element.text.strip() if element.text else ""
             if text and len(text.split()) >= 5:
                 current_text += " " + text
 
-    # Flush final section
     if current_text.strip() and not skip_current_section:
         new_chunks, chunk_index = split_into_chunks(
             current_text.strip(), arxiv_id, title, current_section, chunk_index
@@ -151,7 +143,7 @@ def main():
     with open(METADATA_FILE) as f:
         content = f.read()
         if not content.strip():
-            print("metadata.json is empty!")
+            print("metadata.json is empty")
             exit()
         papers = json.loads(content)
 
