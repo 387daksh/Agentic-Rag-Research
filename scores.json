@@ -1,0 +1,65 @@
+[
+  {
+    "config": "full_agent",
+    "n": 30,
+    "accuracy": 4.87,
+    "faithfulness": 4.47,
+    "citations": 3.33,
+    "latency": 0.0,
+    "tools": 0.0
+  },
+  {
+    "config": "baseline",
+    "n": 30,
+    "accuracy": 3.27,
+    "faithfulness": 3.47,
+    "citations": 2.47,
+    "latency": 0.0,
+    "tools": 0.0
+  },
+  {
+    "config": "ablation_no_planner",
+    "n": 30,
+    "accuracy": 4.9,
+    "faithfulness": 4.43,
+    "citations": 2.87,
+    "latency": 0.0,
+    "tools": 0.0
+  },
+  {
+    "config": "ablation_no_reflector",
+    "n": 30,
+    "accuracy": 4.9,
+    "faithfulness": 4.5,
+    "citations": 3.5,
+    "latency": 0.0,
+    "tools": 0.0
+  },
+  {
+    "config": "ablation_no_reranker",
+    "n": 30,
+    "accuracy": 4.93,
+    "faithfulness": 4.4,
+    "citations": 3.33,
+    "latency": 0.0,
+    "tools": 0.0
+  },
+  {
+    "config": "ablation_no_hyde",
+    "n": 30,
+    "accuracy": 4.93,
+    "faithfulness": 4.43,
+    "citations": 3.17,
+    "latency": 0.0,
+    "tools": 0.0
+  },
+  {
+    "config": "ablation_no_verifier",
+    "n": 30,
+    "accuracy": 4.97,
+    "faithfulness": 4.43,
+    "citations": 3.4,
+    "latency": 0.0,
+    "tools": 0.0
+  }
+]
