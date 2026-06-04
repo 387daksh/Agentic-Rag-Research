@@ -193,7 +193,7 @@ Final Answer:"""
 def verify_citations(answer, all_chunks):
     chunk_lookup = {}
     for chunk in all_chunks:
-        arxiv_id = chunk["arxiv_id"]
+        arxiv_id=chunk["arxiv_id"]
         if arxiv_id not in chunk_lookup:
             chunk_lookup[arxiv_id] = chunk["text"]
 
@@ -209,10 +209,8 @@ def verify_citations(answer, all_chunks):
             verified.append(arxiv_id)
         else:
             unverified.append(arxiv_id)
-
     for uid in unverified:
         answer = answer.replace(f"[{uid}]", "")
-
     return answer, verified
 
 def run_agent(question, question_type="survey",use_planner=True, use_reflector=True,use_reranker=True, use_hyde=True,use_verifier=True, backend="mistral"):
@@ -226,14 +224,14 @@ def run_agent(question, question_type="survey",use_planner=True, use_reflector=T
     tool_call_count = 0
 
     if use_planner:
-        print("\n[PLANNER] Breaking into sub-questions...")
+        print("\n[PLANNER] breaking into sub questions")
         sub_questions = plan(question, backend=backend)
         print(f"Sub-questions: {sub_questions}")
     else:
         print("\n[PLANNER] Skipped")
         sub_questions = [question]
 
-    print("\n[RETRIEVER] Retrieving evidence...")
+    print("\n[RETRIEVER] Retrieving evidence")
     for sub_q in sub_questions:
         chunks = retrieve(
             collection, bm25, chunks_data, sub_q,
@@ -266,10 +264,7 @@ def run_agent(question, question_type="survey",use_planner=True, use_reflector=T
                 break
 
             for new_query in reflection.get("new_queries", []):
-                new_chunks = retrieve(
-                    collection, bm25, chunks_data, new_query,
-                    n_results=3, use_hyde=use_hyde, use_reranker=use_reranker
-                )
+                new_chunks = retrieve(collection, bm25, chunks_data, new_query,n_results=3, use_hyde=use_hyde, use_reranker=use_reranker)
                 all_chunks.extend(new_chunks)
                 tool_call_count += 1
 
@@ -282,19 +277,19 @@ def run_agent(question, question_type="survey",use_planner=True, use_reflector=T
                     unique_chunks.append(chunk)
             all_chunks = unique_chunks
     else:
-        print("\n[REFLECTOR] Skipped")
+        print("\n[REFLECTOR] skipped")
 
     # Step 4: Synthesize
-    print(f"\n[SYNTHESIZER] Writing answer from {len(all_chunks)} chunks...")
+    print(f"\n[SYNTHESIZER] writing answer from {len(all_chunks)} chunks")
     answer = synthesize(question, all_chunks, question_type, backend=backend)
 
     # Step 5: Verify citations
     if use_verifier:
-        print("\n[VERIFIER] Checking citations...")
+        print("\n[VERIFIER] checking citations")
         answer, verified_ids = verify_citations(answer, all_chunks)
-        print(f"Verified citations: {verified_ids}")
+        print(f"verified citations: {verified_ids}")
     else:
-        print("\n[VERIFIER] Skipped")
+        print("\n[VERIFIER] skipped")
         verified_ids = re.findall(r'\[(\d{4}\.\d{4,5}(?:v\d+)?)\]', answer)
 
     return {
