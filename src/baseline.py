@@ -4,7 +4,7 @@ import json
 from retriever import build_index,retrieve
 GROQ_CLIENT=Groq(api_key="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")
 MODEL="llama-3.3-70b-versatile"
-collection, bm25, chunks_data = build_index()
+collection, bm25, chunks_data,G = build_index()
 def run_baseline(question):
     print(f"\n{'='*50}")
     print(f"Question: {question}")

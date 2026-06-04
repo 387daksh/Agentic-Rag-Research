@@ -61,5 +61,14 @@
     "citations": 3.4,
     "latency": 0.0,
     "tools": 0.0
+  },
+  {
+    "config": "ablation_hippo",
+    "n": 30,
+    "accuracy": 4.93,
+    "faithfulness": 4.43,
+    "citations": 3.83,
+    "latency": 0.0,
+    "tools": 0.0
   }
 ]

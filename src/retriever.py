@@ -10,10 +10,12 @@ import pickle
 from collections import defaultdict
 from functools import lru_cache
 import re
+import networkx as nx
 
 CHUNKS_FILE="data/chunks.json"
 CHROMA_DIR="data/chroma"
 BM25_FILE = "data/BM25"
+GRAPH_FILE = "data/chunk_graph.pkl"
 print("loading embedding model")
 EMBEDDER=SentenceTransformer("BAAI/bge-m3",device="cuda")
 print("loading reranker")
@@ -24,6 +26,33 @@ GROQ_CLIENT=Groq(api_key="gsk_6fLwwFSIFZgKwIEzgzRZWGdyb3FYiS6n74uKBZYBmjYCgWLKWc
 VECTOR_K = 40
 BM25_K = 20
 
+
+def build_chunk_graph(chunks):
+    if os.path.exists(GRAPH_FILE):
+        print("loading cached chunk graph")
+        with open(GRAPH_FILE, "rb") as f:
+            G = pickle.load(f)
+        print(f"graph loaded: {len(G.nodes)} nodes, {len(G.edges)} edges")
+        return G
+    print("building hipporag chunk graph")
+    G=nx.DiGraph()
+    for chunk in chunks:
+        G.add_node(chunk["chunk_id"],chunk=chunk)
+    arxiv_to_chunks = {}
+    for chunk in chunks:
+        aid = chunk["arxiv_id"]
+        if aid not in arxiv_to_chunks:
+            arxiv_to_chunks[aid] = []
+        arxiv_to_chunks[aid].append(chunk["chunk_id"])
+    for aid, chunk_ids in arxiv_to_chunks.items():
+        for i in range(len(chunk_ids)):
+            for j in range(len(chunk_ids)):
+                if i != j:
+                    G.add_edge(chunk_ids[i], chunk_ids[j], weight=1.0)
+    with open(GRAPH_FILE, "wb") as f:
+        pickle.dump(G, f)
+    print(f"graph built and cached: {len(G.nodes)} nodes, {len(G.edges)} edges")
+    return G
 
 def setup_chromadb(chunks):
     client=chromadb.PersistentClient(path=CHROMA_DIR)
@@ -100,6 +129,42 @@ def search_bm25(bm25,query,chunks,n_results=10):
         })
     return results
 
+def hippo_retrieve(seed_chunks, G, n_results=5, min_score_ratio=0.3):
+    if not seed_chunks or len(G.nodes) == 0:
+        return seed_chunks
+    top_seeds = seed_chunks[:3]
+    seed_ids = {c["chunk_id"] for c in top_seeds if c["chunk_id"] in G}
+    if not seed_ids:
+        return seed_chunks
+    
+    personalization = {node: 0.0 for node in G.nodes}
+    for sid in seed_ids:
+        personalization[sid] = 1.0 / len(seed_ids)
+    
+    try:
+        ranks = nx.pagerank(G,alpha=0.85,personalization=personalization,max_iter=100,tol=1e-4)
+    except Exception as e:
+        print(f"pagerank failed: {e}")
+        return seed_chunks
+    max_score = max(ranks.values())
+    threshold = max_score * min_score_ratio
+    ranked = sorted(ranks.items(), key=lambda x: x[1], reverse=True)
+    result = []
+    seen_arxiv = set()
+    for node_id, score in ranked:
+        if score < threshold:
+            break
+        node_data = G.nodes.get(node_id, {})
+        chunk = node_data.get("chunk")
+        if chunk is None:
+            continue
+        if chunk["arxiv_id"] not in seen_arxiv:
+            chunk["pagerank_score"] = round(score, 6)
+            result.append(chunk)
+            seen_arxiv.add(chunk["arxiv_id"])
+        if len(result) >= n_results:
+            break
+    return result if len(result) >= 2 else seed_chunks
 def reciprocal_rank_fusion(chromadb_results,bm25_results,k=60):
     print("\nCHROMA")
     for r in chromadb_results:
@@ -158,7 +223,7 @@ Output one paragraph.
     )
     hypothetical_answer = response.choices[0].message.content
     return f"{query} {hypothetical_answer}"
-def retrieve(collections,bm25,chunks,query,n_results=5,use_hyde=True,use_reranker=True):
+def retrieve(collections,bm25,chunks,query,G=None,n_results=5,use_hyde=True,use_reranker=True,use_hippo=True):
     if use_hyde:
         expanded_query=hyde(query)
     else:
@@ -207,8 +272,12 @@ def retrieve(collections,bm25,chunks,query,n_results=5,use_hyde=True,use_reranke
     # print("after reranking")
     # for r in reranked[:20]:
     #     print(r["title"])
-    
-    return reranked[:n_results]
+    seed_chunks = reranked[:n_results]
+    if use_hippo and G is not None:
+        print("running hipporag pagerank")
+        result = hippo_retrieve(seed_chunks, G, n_results=n_results)
+        return result
+    return seed_chunks
 
 def rerank(query,chunks):
     pairs=[[query,
@@ -246,14 +315,18 @@ def build_index():
         with open(BM25_FILE, "wb") as f:
             pickle.dump(bm25, f)
         print("bm25 saved")
+
+    print("building hipporag chunk graph")
+    G= build_chunk_graph(chunks)
+    print(f"graph built: {len(G.nodes)} nodes, {len(G.edges)} edges")
     
-    return collection,bm25,chunks
+    return collection,bm25,chunks,G
 
 if __name__=="__main__":
-    collection,bm25,chunks=build_index()
+    collection,bm25,chunks,G=build_index()
     test_query="The τ-bench paper introduces a reliability metric beyond simple pass-rate. What is it called, and what does it measure?"
     print(f"\nTest query: {test_query}")
-    results = retrieve(collection, bm25, chunks, test_query)
+    results = retrieve(collection, bm25, chunks,test_query,G=G)
     for i,r in enumerate(results):
         print(f"\n Result {i+1} ")
         print(f"Paper: {r['title']}")

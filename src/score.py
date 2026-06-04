@@ -120,14 +120,15 @@ def main():
     print(f"loaded {len(qtypes)} questions")
 
     configs = [
-        "full_agent",
-        "baseline",
-        "ablation_no_planner",
-        "ablation_no_reflector",
-        "ablation_no_reranker",
-        "ablation_no_hyde",
-        "ablation_no_verifier",
-        "ablation_no_hybrid",
+        "ablation_hippo"
+        # "full_agent",
+        # "baseline",
+        # "ablation_no_planner",
+        # "ablation_no_reflector",
+        # "ablation_no_reranker",
+        # "ablation_no_hyde",
+        # "ablation_no_verifier",
+        # "ablation_no_hybrid",
     ]
 
     print(f"\n{'config':<25} {'accuracy':>10} {'faithful':>10} {'citations':>10} {'latency':>10} {'tools':>8}")

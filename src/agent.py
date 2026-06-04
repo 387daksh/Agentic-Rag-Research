@@ -14,7 +14,7 @@ MISTRAL_CLIENT = Mistral( api_key="aHeEzsRfNADJpzgOKhPFTs4z7mO3V8IJ")
 
 GROQ_MODEL = "llama-3.1-8b-instant"
 MISTRAL_MODEL = "ministral-14b-2512"
-collection, bm25, chunks_data = build_index()
+collection, bm25, chunks_data,G = build_index()
 
 def llm_call(prompt, backend="mistral", max_tokens=800, json_mode=False):
     time.sleep(4.2)
@@ -213,7 +213,7 @@ def verify_citations(answer, all_chunks):
         answer = answer.replace(f"[{uid}]", "")
     return answer, verified
 
-def run_agent(question, question_type="survey",use_planner=True, use_reflector=True,use_reranker=True, use_hyde=True,use_verifier=True, backend="mistral"):
+def run_agent(question, question_type="survey",use_planner=True, use_reflector=True,use_reranker=True, use_hyde=True,use_verifier=True, backend="mistral",use_hippo=True):
 
     print(f"\n{'='*50}")
     print(f"Question: {question}")
@@ -233,10 +233,7 @@ def run_agent(question, question_type="survey",use_planner=True, use_reflector=T
 
     print("\n[RETRIEVER] Retrieving evidence")
     for sub_q in sub_questions:
-        chunks = retrieve(
-            collection, bm25, chunks_data, sub_q,
-            n_results=5, use_hyde=use_hyde, use_reranker=use_reranker
-        )
+        chunks = retrieve(collection, bm25, chunks_data, sub_q,G=G,n_results=5, use_hyde=use_hyde, use_reranker=use_reranker,use_hippo=use_hippo)
         all_chunks.extend(chunks)
         tool_call_count += 1
     seen_ids = set()
@@ -264,7 +261,7 @@ def run_agent(question, question_type="survey",use_planner=True, use_reflector=T
                 break
 
             for new_query in reflection.get("new_queries", []):
-                new_chunks = retrieve(collection, bm25, chunks_data, new_query,n_results=3, use_hyde=use_hyde, use_reranker=use_reranker)
+                new_chunks = retrieve(collection, bm25, chunks_data, new_query,G=G,n_results=3, use_hyde=use_hyde, use_reranker=use_reranker,use_hippo=use_hippo)
                 all_chunks.extend(new_chunks)
                 tool_call_count += 1
 
