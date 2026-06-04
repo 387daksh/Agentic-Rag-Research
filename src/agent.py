@@ -7,10 +7,16 @@ import google.generativeai as genai
 from mistralai.client import Mistral
 from retriever import build_index, retrieve
 
-GROQ_CLIENT = Groq(api_key="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")
-genai.configure(api_key="AQ.Ab8RN6JIPO2THkMXTYRMKrukMInFyOZKhTYj3MHEC94KYeDYBQ")
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+GROQ_CLIENT = Groq(api_key=os.environ.get("GROQ_API_KEY", ""))
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY", ""))
 GEMINI_CLIENT = genai.GenerativeModel("gemma-4-31b-it")
-MISTRAL_CLIENT = Mistral( api_key="aHeEzsRfNADJpzgOKhPFTs4z7mO3V8IJ")
+MISTRAL_CLIENT = Mistral(api_key=os.environ.get("MISTRAL_API_KEY", ""))
 
 GROQ_MODEL = "llama-3.1-8b-instant"
 MISTRAL_MODEL = "ministral-14b-2512"

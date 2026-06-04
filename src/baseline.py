@@ -1,8 +1,13 @@
-import json
+import os
 from groq import Groq
 import json
 from retriever import build_index,retrieve
-GROQ_CLIENT=Groq(api_key="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")
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+GROQ_CLIENT=Groq(api_key=os.environ.get("GROQ_API_KEY", ""))
 MODEL="llama-3.3-70b-versatile"
 collection, bm25, chunks_data,G = build_index()
 def run_baseline(question):

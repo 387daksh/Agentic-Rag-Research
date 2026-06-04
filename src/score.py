@@ -3,7 +3,13 @@ import os
 from mistralai.client import Mistral
 import time
 
-client = Mistral(api_key="aHeEzsRfNADJpzgOKhPFTs4z7mO3V8IJ")
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+client = Mistral(api_key=os.environ.get("MISTRAL_API_KEY", "aHeEzsRfNADJpzgOKhPFTs4z7mO3V8IJ"))
 model = "mistral-small-latest"
 predictions_dir = "predictions"
 questions_file = "eval/questions.jsonl"
@@ -120,15 +126,14 @@ def main():
     print(f"loaded {len(qtypes)} questions")
 
     configs = [
+        "full_agent",
+        "baseline",
+        "ablation_no_planner",
+        "ablation_no_reflector",
+        "ablation_no_reranker",
+        "ablation_no_hyde",
+        "ablation_no_verifier",
         "ablation_hippo"
-        # "full_agent",
-        # "baseline",
-        # "ablation_no_planner",
-        # "ablation_no_reflector",
-        # "ablation_no_reranker",
-        # "ablation_no_hyde",
-        # "ablation_no_verifier",
-        # "ablation_no_hybrid",
     ]
 
     print(f"\n{'config':<25} {'accuracy':>10} {'faithful':>10} {'citations':>10} {'latency':>10} {'tools':>8}")

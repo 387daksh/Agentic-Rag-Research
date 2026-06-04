@@ -1,0 +1,15 @@
+arxiv
+requests
+docling
+chromadb
+sentence-transformers
+rank-bm25
+groq
+google-generativeai
+mistralai
+networkx
+nltk
+pymupdf
+tqdm
+torch
+python-dotenv

@@ -67,15 +67,15 @@ def main():
     questions = load_questions()
     print(f"Loaded {len(questions)} questions")
     configs = [
-    # ("full_agent",            lambda q: run_agent(q["question"], q.get("type", "survey"))),
-    # ("baseline",              lambda q: run_baseline(q["question"])),
-    # ("ablation_no_planner",   lambda q: run_agent(q["question"], q.get("type", "survey"), use_planner=False)),
-    # ("ablation_no_reflector", lambda q: run_agent(q["question"], q.get("type", "survey"), use_reflector=False)),
-    # ("ablation_no_reranker",  lambda q: run_agent(q["question"], q.get("type", "survey"), use_reranker=False)),
-    # ("ablation_no_hyde",      lambda q: run_agent(q["question"], q.get("type", "survey"), use_hyde=False)),
-    # ("ablation_no_verifier",  lambda q: run_agent(q["question"], q.get("type", "survey"), use_verifier=False)),
-    ("ablation_hippo", lambda q: run_agent(q["question"], q.get("type","survey"), use_hippo=True)),
-]
+        ("full_agent",            lambda q: run_agent(q["question"], q.get("type", "survey"))),
+        ("baseline",              lambda q: run_baseline(q["question"])),
+        ("ablation_no_planner",   lambda q: run_agent(q["question"], q.get("type", "survey"), use_planner=False)),
+        ("ablation_no_reflector", lambda q: run_agent(q["question"], q.get("type", "survey"), use_reflector=False)),
+        ("ablation_no_reranker",  lambda q: run_agent(q["question"], q.get("type", "survey"), use_reranker=False)),
+        ("ablation_no_hyde",      lambda q: run_agent(q["question"], q.get("type", "survey"), use_hyde=False)),
+        ("ablation_no_verifier",  lambda q: run_agent(q["question"], q.get("type", "survey"), use_verifier=False)),
+        ("ablation_hippo",        lambda q: run_agent(q["question"], q.get("type", "survey"), use_hippo=True)),
+    ]
     for config_name,run_fn in configs:
         print(f"RUNNING CONFIG: {config_name}")
         run_config(config_name, run_fn, questions)

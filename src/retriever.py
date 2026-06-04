@@ -21,19 +21,30 @@ EMBEDDER=SentenceTransformer("BAAI/bge-m3",device="cuda")
 print("loading reranker")
 RERANKER = CrossEncoder("BAAI/bge-reranker-large", device="cuda")
 STEMMER = PorterStemmer()
-# GROQ_CLIENT=Groq(api_key=os.environ.get("GROQ_API_KEY"))
-GROQ_CLIENT=Groq(api_key="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")
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+GROQ_CLIENT=Groq(api_key=os.environ.get("GROQ_API_KEY", ""))
 VECTOR_K = 40
 BM25_K = 20
 
 
 def build_chunk_graph(chunks):
-    if os.path.exists(GRAPH_FILE):
+    if os.path.exists(GRAPH_FILE) and os.path.getsize(GRAPH_FILE) > 1000:
         print("loading cached chunk graph")
-        with open(GRAPH_FILE, "rb") as f:
-            G = pickle.load(f)
-        print(f"graph loaded: {len(G.nodes)} nodes, {len(G.edges)} edges")
-        return G
+        try:
+            with open(GRAPH_FILE, "rb") as f:
+                G = pickle.load(f)
+            print(f"graph loaded: {len(G.nodes)} nodes, {len(G.edges)} edges")
+            return G
+        except Exception as e:
+            print(f"failed to load cached graph: {e}, rebuilding...")
+    else:
+        if os.path.exists(GRAPH_FILE):
+            print("cached chunk graph is an LFS pointer or invalid, rebuilding...")
     print("building hipporag chunk graph")
     G=nx.DiGraph()
     for chunk in chunks:
